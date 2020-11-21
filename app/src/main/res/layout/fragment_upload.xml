@@ -29,8 +29,7 @@
             android:layout_height="40dp"
             android:layout_gravity="top |left"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:visibility="visible"/>
+            android:layout_marginLeft="10dp" />
 
         <ImageButton
             android:id="@+id/imageview_upload_close"
