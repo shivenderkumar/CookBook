@@ -1,5 +1,7 @@
 package com.shivenderkumar.kitchenbook.ui.upload;
 
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Rational;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +48,9 @@ public class UploadFragment extends Fragment {
 
     ImageCapture imageCapture;
     //////////
+
+    File f;
+    ImageView imageview_preview;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -100,16 +106,23 @@ public class UploadFragment extends Fragment {
         btn_takepicture.setVisibility(View.GONE);
 
         File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpeg");
+        f = file;
 
         ImageCapture.OutputFileOptions outputFileOptions =
                 new ImageCapture.OutputFileOptions.Builder(file).build();
+
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(getContext()),
                 new ImageCapture.OnImageSavedCallback(){
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         // insert your code here.
-                        Toast.makeText(getContext(), "IMAGE FILE : "+file.getName(), Toast.LENGTH_LONG).show();
+
+
+                        imageview_preview.setVisibility(View.VISIBLE);
+                        if (file.exists()){
+                            imageview_preview.setImageURI(Uri.fromFile(file));
+                        }
 
                     }
 
@@ -117,9 +130,31 @@ public class UploadFragment extends Fragment {
                     public void onError(@NonNull ImageCaptureException exception) {
                         // insert your code here.
                         System.out.println("EXCEPTION ERROR : "+ exception.getMessage());
-
                     }
                 });
+
+    }
+
+    void saveCaptureImageUseCase(){
+        imageview_preview.setVisibility(View.GONE);
+
+        imageButton_back.setVisibility(View.VISIBLE);
+        imageButton_close.setVisibility(View.GONE);
+        imageButton_check.setVisibility(View.GONE);
+        btn_takepicture.setVisibility(View.VISIBLE);
+
+        Toast.makeText(getContext(), "IMAGE FILE : "+f.getName(), Toast.LENGTH_LONG).show();
+    }
+
+    void imageButton_closeClick(){
+        imageview_preview.setVisibility(View.INVISIBLE);
+
+        imageButton_back.setVisibility(View.VISIBLE);
+        imageButton_close.setVisibility(View.GONE);
+        imageButton_check.setVisibility(View.GONE);
+        btn_takepicture.setVisibility(View.VISIBLE);
+
+        f.delete();
 
     }
 
@@ -133,6 +168,8 @@ public class UploadFragment extends Fragment {
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
         imageButton_close = root.findViewById(R.id.imageview_upload_close);
         imageButton_check = root.findViewById(R.id.imageview_upload_check);
+
+        imageview_preview = root.findViewById(R.id.imageview_preview);
 
     }
 
@@ -157,13 +194,13 @@ public class UploadFragment extends Fragment {
                 btn_takepictureClick();
             }
         });
-    }
 
-    void imageButton_closeClick(){
-        imageButton_back.setVisibility(View.VISIBLE);
-        imageButton_close.setVisibility(View.GONE);
-        imageButton_check.setVisibility(View.GONE);
-        btn_takepicture.setVisibility(View.VISIBLE);
+        imageButton_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveCaptureImageUseCase();
+            }
+        });
     }
 
     void imageButton_backClick(){
