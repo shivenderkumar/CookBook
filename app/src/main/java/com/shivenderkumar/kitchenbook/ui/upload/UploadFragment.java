@@ -40,26 +40,7 @@ public class UploadFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_upload, container, false);
         init(root);
-        imageButton_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageButton_backClick();
-            }
-        });
-
-        imageButton_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageButton_closeClick();
-            }
-        });
-
-        btn_takepicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn_takepictureClick();
-            }
-        });
+        setClickListeners();
 
         ///camera X
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
@@ -99,11 +80,16 @@ public class UploadFragment extends Fragment {
     }
     //////////
 
-    @Override
-    public void onPause() {
-        navView.setVisibility(View.VISIBLE);
-        super.onPause();
+    void btn_takepictureClick(){
+        imageButton_back.setVisibility(View.GONE);
+        imageButton_close.setVisibility(View.VISIBLE);
+        imageButton_check.setVisibility(View.VISIBLE);
+        btn_takepicture.setVisibility(View.GONE);
     }
+
+
+
+    ////////////////////////
 
     void init(View root){
         navView = getActivity().findViewById(R.id.nav_view);
@@ -116,11 +102,27 @@ public class UploadFragment extends Fragment {
 
     }
 
-    void btn_takepictureClick(){
-        imageButton_back.setVisibility(View.GONE);
-        imageButton_close.setVisibility(View.VISIBLE);
-        imageButton_check.setVisibility(View.VISIBLE);
-        btn_takepicture.setVisibility(View.GONE);
+    void setClickListeners(){
+        imageButton_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageButton_backClick();
+            }
+        });
+
+        imageButton_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageButton_closeClick();
+            }
+        });
+
+        btn_takepicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_takepictureClick();
+            }
+        });
     }
 
     void imageButton_closeClick(){
@@ -132,6 +134,12 @@ public class UploadFragment extends Fragment {
 
     void imageButton_backClick(){
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onPause() {
+        navView.setVisibility(View.VISIBLE);
+        super.onPause();
     }
 
 }
