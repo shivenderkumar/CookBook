@@ -416,6 +416,5 @@ public class UploadFragment extends Fragment {
 
     /////////////////////////////
 
-
 }
 
