@@ -15,11 +15,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextureView
-            android:id="@+id/texture"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foregroundGravity="center" />
+            android:layout_height="match_parent"/>
 
         <ImageButton
             android:id="@+id/imageview_upload_back"
@@ -30,7 +29,8 @@
             android:layout_gravity="top |left"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            />
 
         <ImageButton
             android:id="@+id/imageview_upload_close"
@@ -41,7 +41,8 @@
             android:layout_gravity="top |left"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            />
 
         <ImageButton
             android:id="@+id/imageview_upload_check"
@@ -61,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="28dp"
-            android:layout_gravity="bottom |center_horizontal"/>
+            android:layout_gravity="bottom |center_horizontal" />
 
     </FrameLayout>
 
