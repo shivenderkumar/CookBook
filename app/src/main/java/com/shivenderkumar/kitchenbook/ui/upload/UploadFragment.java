@@ -1,16 +1,24 @@
 package com.shivenderkumar.kitchenbook.ui.upload;
 
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Rational;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
+
+import androidx.camera.core.UseCaseGroup;
+import androidx.camera.core.ViewPort;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -21,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.shivenderkumar.kitchenbook.R;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 public class UploadFragment extends Fragment {
@@ -34,6 +43,7 @@ public class UploadFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
 
+    ImageCapture imageCapture;
     //////////
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,7 +60,26 @@ public class UploadFragment extends Fragment {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider);
+
+                //preview use case
+                Preview preview = new Preview.Builder()
+                        .build();
+
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                // imagecapture use case
+                imageCapture = new ImageCapture.Builder()
+                                .setTargetRotation(root.getDisplay().getRotation())
+                                .build();
+
+                // camera selector
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
+
+
+                Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
+
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
@@ -64,30 +93,35 @@ public class UploadFragment extends Fragment {
         return root;
     }
 
-    //camera x
-    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        Preview preview = new Preview.Builder()
-                .build();
-
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
-
-    }
-    //////////
-
     void btn_takepictureClick(){
         imageButton_back.setVisibility(View.GONE);
         imageButton_close.setVisibility(View.VISIBLE);
         imageButton_check.setVisibility(View.VISIBLE);
         btn_takepicture.setVisibility(View.GONE);
+
+        File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpeg");
+
+        ImageCapture.OutputFileOptions outputFileOptions =
+                new ImageCapture.OutputFileOptions.Builder(file).build();
+        imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(getContext()),
+                new ImageCapture.OnImageSavedCallback(){
+
+                    @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        // insert your code here.
+                        Toast.makeText(getContext(), "IMAGE FILE : "+file.getName(), Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        // insert your code here.
+                        System.out.println("EXCEPTION ERROR : "+ exception.getMessage());
+
+                    }
+                });
+
     }
-
-
 
     ////////////////////////
 
@@ -143,3 +177,25 @@ public class UploadFragment extends Fragment {
     }
 
 }
+
+
+
+
+//Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+//bindPreview(cameraProvider);
+
+//camera x
+//    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+//        Preview preview = new Preview.Builder()
+//                .build();
+//
+//        CameraSelector cameraSelector = new CameraSelector.Builder()
+//                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+//                .build();
+//
+//        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+//
+//        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+//
+//    }
+//////////
