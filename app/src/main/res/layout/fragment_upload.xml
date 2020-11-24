@@ -8,6 +8,7 @@
     tools:context=".ui.upload.UploadFragment">
 
     <FrameLayout
+        android:id="@+id/framelayout_container_camerax"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -71,5 +72,11 @@
             android:layout_marginRight="10dp"/>
 
     </FrameLayout>
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/framelayout_container_imageupload"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

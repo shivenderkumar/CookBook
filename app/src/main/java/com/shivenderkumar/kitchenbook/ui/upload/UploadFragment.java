@@ -26,6 +26,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -52,49 +53,73 @@ public class UploadFragment extends Fragment {
     File f;
     ImageView imageview_preview;
 
+    ViewGroup viewGroup_container;
+    LayoutInflater layoutInflater;
+    Bundle bundle_savedInstanceState;
+    boolean flag_fragment = false;
+
+    Fragment fragment;
+    FragmentManager fragmentManager;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_upload, container, false);
-        init(root);
-        setClickListeners();
+        layoutInflater = inflater;
+        bundle_savedInstanceState = savedInstanceState;
+        viewGroup_container = container;
 
-        ///camera X
-        cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-
-        previewView = root.findViewById(R.id.previewView);
-
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-
-                //preview use case
-                Preview preview = new Preview.Builder()
-                        .build();
-
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-                // imagecapture use case
-                imageCapture = new ImageCapture.Builder()
-                                .setTargetRotation(root.getDisplay().getRotation())
-                                .build();
-
-                // camera selector
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
+        View root;
+        if (flag_fragment == false ){   // flag_fragment flase = camerax FrameLayout
+            root = inflater.inflate(R.layout.fragment_upload, container, false);
+            init(root);
+            setClickListeners();
 
 
-                Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
+            System.out.println("VALUE OF FLAG FRAGMENT : " + flag_fragment);
 
-            } catch (ExecutionException | InterruptedException e) {
-                // No errors need to be handled for this Future.
-                // This should never be reached.
-                System.out.println("ERROR IN CAMERAX PROVIDER AVAILABILTY : "+e.getMessage());
-            }
-        }, ContextCompat.getMainExecutor(getContext()));
+            ///camera X
+            cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+
+            previewView = root.findViewById(R.id.previewView);
+
+            cameraProviderFuture.addListener(() -> {
+                try {
+                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+                    //preview use case
+                    Preview preview = new Preview.Builder()
+                            .build();
+
+                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                    // imagecapture use case
+                    imageCapture = new ImageCapture.Builder()
+                            .setTargetRotation(root.getDisplay().getRotation())
+                            .build();
+
+                    // camera selector
+                    CameraSelector cameraSelector = new CameraSelector.Builder()
+                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                            .build();
 
 
-        //////////
+                    Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
+
+                } catch (ExecutionException | InterruptedException e) {
+                    // No errors need to be handled for this Future.
+                    // This should never be reached.
+                    System.out.println("ERROR IN CAMERAX PROVIDER AVAILABILTY : "+e.getMessage());
+                }
+            }, ContextCompat.getMainExecutor(getContext()));
+
+            //////////
+
+        }else{ // flag fragment true = image upload
+            flag_fragment = false;
+            System.out.println("VALUE OF FLAG FRAGMENT : " + flag_fragment);
+            root = inflater.inflate(R.layout.layout_fragmennt_imageupload, container, false);
+
+        }
 
         return root;
     }
@@ -120,7 +145,7 @@ public class UploadFragment extends Fragment {
 
 
                         imageview_preview.setVisibility(View.VISIBLE);
-                        if (file.exists()){
+                        if (file.exists()){                             
                             imageview_preview.setImageURI(Uri.fromFile(file));
                         }
 
@@ -140,7 +165,7 @@ public class UploadFragment extends Fragment {
 
         imageButton_back.setVisibility(View.VISIBLE);
         imageButton_close.setVisibility(View.GONE);
-        imageButton_check.setVisibility(View.GONE);
+        imageButton_check.setVisibility(View.INVISIBLE);
         btn_takepicture.setVisibility(View.VISIBLE);
 
         Toast.makeText(getContext(), "IMAGE FILE : "+f.getName(), Toast.LENGTH_LONG).show();
@@ -198,7 +223,9 @@ public class UploadFragment extends Fragment {
         imageButton_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag_fragment = true;
                 saveCaptureImageUseCase();
+                onCreateView(layoutInflater, viewGroup_container, bundle_savedInstanceState);
             }
         });
     }

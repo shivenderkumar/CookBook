@@ -28,14 +28,18 @@ public class MainActivity extends AppCompatActivity {
     ImageButton imageButton_search;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    protected void onStart() {
         kitchenBookDatabaseHelper = KitchenBookDatabaseHelper.getInstance(this);
         user = kitchenBookDatabaseHelper.getUser().get(0);
 
         showDialogFragment(user);
+        super.onStart();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         navView = findViewById(R.id.nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
