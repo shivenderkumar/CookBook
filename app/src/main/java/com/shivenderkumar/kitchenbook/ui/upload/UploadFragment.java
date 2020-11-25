@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -48,104 +49,101 @@ public class UploadFragment extends Fragment {
     PreviewView previewView;
 
     ImageCapture imageCapture;
-    //////////
 
     File f;
     ImageView imageview_preview;
+    //////////
 
-    ViewGroup viewGroup_container;
+    ViewGroup viewGroup_framelayout_upload;
+    Button button_BackToCamera;
+
     LayoutInflater layoutInflater;
-    Bundle bundle_savedInstanceState;
-    boolean flag_fragment = false;
-
-    Fragment fragment;
-    FragmentManager fragmentManager;
-
+    ViewGroup viewGroup_container;
+    Bundle bundle_saveInstanceState;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         layoutInflater = inflater;
-        bundle_savedInstanceState = savedInstanceState;
         viewGroup_container = container;
+        bundle_saveInstanceState = savedInstanceState;
 
-        View root;
-        if (flag_fragment == false ){   // flag_fragment flase = camerax FrameLayout
-            root = inflater.inflate(R.layout.fragment_upload, container, false);
-            init(root);
-            setClickListeners();
+        System.out.println("CHANGE ROOT LAYOUT XXXXXXXXXXXXXXXXXXXXXXX");
 
+        navView = getActivity().findViewById(R.id.nav_view);
+        navView.setVisibility(View.GONE);
 
-            System.out.println("VALUE OF FLAG FRAGMENT : " + flag_fragment);
+        View root = inflater.inflate(R.layout.fragment_upload, container, false);
 
-            ///camera X
-            cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+        init(root);
+        setClickListeners();
 
-            previewView = root.findViewById(R.id.previewView);
-
-            cameraProviderFuture.addListener(() -> {
-                try {
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-
-                    //preview use case
-                    Preview preview = new Preview.Builder()
-                            .build();
-
-                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-                    // imagecapture use case
-                    imageCapture = new ImageCapture.Builder()
-                            .setTargetRotation(root.getDisplay().getRotation())
-                            .build();
-
-                    // camera selector
-                    CameraSelector cameraSelector = new CameraSelector.Builder()
-                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                            .build();
-
-
-                    Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
-
-                } catch (ExecutionException | InterruptedException e) {
-                    // No errors need to be handled for this Future.
-                    // This should never be reached.
-                    System.out.println("ERROR IN CAMERAX PROVIDER AVAILABILTY : "+e.getMessage());
-                }
-            }, ContextCompat.getMainExecutor(getContext()));
-
-            //////////
-
-        }else{ // flag fragment true = image upload
-            flag_fragment = false;
-            System.out.println("VALUE OF FLAG FRAGMENT : " + flag_fragment);
-            root = inflater.inflate(R.layout.layout_fragmennt_imageupload, container, false);
-
-        }
+        init_preview_imagecamera_usecase(root);
 
         return root;
     }
 
-    void btn_takepictureClick(){
+    private void init_preview_imagecamera_usecase(View root) {
+        ///camera X
+        cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+
+        previewView = root.findViewById(R.id.previewView);
+
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+                //preview use case
+                Preview preview = new Preview.Builder()
+                        .build();
+
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                // imagecapture use case
+                imageCapture = new ImageCapture.Builder()
+                        .setTargetRotation(root.getDisplay().getRotation())
+                        .build();
+
+                // camera selector
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
+
+
+                Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, imageCapture, preview);
+
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+                System.out.println("ERROR IN CAMERAX PROVIDER AVAILABILTY : " + e.getMessage());
+            }
+        }, ContextCompat.getMainExecutor(getContext()));
+
+        //////////
+
+    }
+
+    void btn_takepictureClick() {
         imageButton_back.setVisibility(View.GONE);
         imageButton_close.setVisibility(View.VISIBLE);
         imageButton_check.setVisibility(View.VISIBLE);
         btn_takepicture.setVisibility(View.GONE);
 
-        File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpeg");
+        File file = new File(Environment.getExternalStorageDirectory() + "/pic.jpeg");
         f = file;
 
         ImageCapture.OutputFileOptions outputFileOptions =
                 new ImageCapture.OutputFileOptions.Builder(file).build();
 
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(getContext()),
-                new ImageCapture.OnImageSavedCallback(){
+                new ImageCapture.OnImageSavedCallback() {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         // insert your code here.
 
-
                         imageview_preview.setVisibility(View.VISIBLE);
-                        if (file.exists()){                             
+                        if (file.exists()) {
                             imageview_preview.setImageURI(Uri.fromFile(file));
                         }
 
@@ -154,24 +152,25 @@ public class UploadFragment extends Fragment {
                     @Override
                     public void onError(@NonNull ImageCaptureException exception) {
                         // insert your code here.
-                        System.out.println("EXCEPTION ERROR : "+ exception.getMessage());
+                        System.out.println("EXCEPTION ERROR : " + exception.getMessage());
                     }
                 });
 
     }
 
-    void saveCaptureImageUseCase(){
+    void saveCaptureImageUseCase() {
         imageview_preview.setVisibility(View.GONE);
 
         imageButton_back.setVisibility(View.VISIBLE);
         imageButton_close.setVisibility(View.GONE);
-        imageButton_check.setVisibility(View.INVISIBLE);
+        imageButton_check.setVisibility(View.GONE);
         btn_takepicture.setVisibility(View.VISIBLE);
 
-        Toast.makeText(getContext(), "IMAGE FILE : "+f.getName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "IMAGE FILE : " + f.getName(), Toast.LENGTH_LONG).show();
+
     }
 
-    void imageButton_closeClick(){
+    void imageButton_closeClick() {
         imageview_preview.setVisibility(View.INVISIBLE);
 
         imageButton_back.setVisibility(View.VISIBLE);
@@ -185,9 +184,9 @@ public class UploadFragment extends Fragment {
 
     ////////////////////////
 
-    void init(View root){
-        navView = getActivity().findViewById(R.id.nav_view);
-        navView.setVisibility(View.GONE);
+    void init(View root) {
+//        navView = getActivity().findViewById(R.id.nav_view);
+//        navView.setVisibility(View.GONE);
 
         btn_takepicture = root.findViewById(R.id.btn_takepicture);
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
@@ -196,9 +195,11 @@ public class UploadFragment extends Fragment {
 
         imageview_preview = root.findViewById(R.id.imageview_preview);
 
+        viewGroup_framelayout_upload = root.findViewById(R.id.framelayout_container);
+
     }
 
-    void setClickListeners(){
+    void setClickListeners() {
         imageButton_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,24 +224,53 @@ public class UploadFragment extends Fragment {
         imageButton_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flag_fragment = true;
                 saveCaptureImageUseCase();
-                onCreateView(layoutInflater, viewGroup_container, bundle_savedInstanceState);
             }
         });
     }
 
-    void imageButton_backClick(){
+    void imageButton_backClick() {
         getActivity().onBackPressed();
     }
 
     @Override
     public void onPause() {
-        navView.setVisibility(View.VISIBLE);
+       // navView.setVisibility(View.VISIBLE);
         super.onPause();
     }
 
+    @Override
+    public void onDestroyView() {
+        navView.setVisibility(View.VISIBLE);
+        super.onDestroyView();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

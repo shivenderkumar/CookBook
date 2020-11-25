@@ -5,7 +5,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
@@ -25,14 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     User user;
     BottomNavigationView navView;
-    ImageButton imageButton_search;
+
+    boolean flag_dialog_fragment = true;
 
     @Override
     protected void onStart() {
-        kitchenBookDatabaseHelper = KitchenBookDatabaseHelper.getInstance(this);
-        user = kitchenBookDatabaseHelper.getUser().get(0);
-
-        showDialogFragment(user);
         super.onStart();
     }
 
@@ -41,18 +37,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        kitchenBookDatabaseHelper = KitchenBookDatabaseHelper.getInstance(this);
+        user = kitchenBookDatabaseHelper.getUser().get(0);
+
+        if(flag_dialog_fragment == true){
+            showDialogFragment(user);
+            flag_dialog_fragment = false;
+        }
+
         navView = findViewById(R.id.nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
-
-        imageButton_search = findViewById(R.id.imageview_search);
-        imageButton_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SearchableActivity.class);
-                startActivity(intent);
-            }
-        });
 
     }
 

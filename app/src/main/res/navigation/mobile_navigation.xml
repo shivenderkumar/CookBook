@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_upload"
-        android:name="com.shivenderkumar.kitchenbook.ui.upload.UploadFragment"
-        android:label="@string/title_upload"
-        tools:layout="@layout/fragment_upload" />
-
-    <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.shivenderkumar.kitchenbook.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
@@ -27,4 +21,9 @@
         android:name="com.shivenderkumar.kitchenbook.ui.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/navigation_upload"
+        android:name="com.shivenderkumar.kitchenbook.ui.upload.UploadFragment"
+        android:label="fragment_upload"
+        tools:layout="@layout/fragment_upload" />
 </navigation>

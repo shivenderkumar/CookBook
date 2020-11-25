@@ -5,8 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment"
-    android:paddingTop="?attr/actionBarSize"
     android:background="@drawable/shape_round_top_fragment">
+
+    <include layout="@layout/toolbar_search"
+        android:id="@+id/toolbar_main_activity"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/text_home"
@@ -21,6 +27,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

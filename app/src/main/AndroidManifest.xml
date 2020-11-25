@@ -6,9 +6,9 @@
         android:name="android.permission.GET_ACCOUNTS"
         android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -20,16 +20,16 @@
         android:theme="@style/Theme.KitchenBook">
         <activity
             android:name=".mysearch.SearchableActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".onboardinglogin.OnBoardingActivity"
-            android:theme="@style/OnBoardingActivityTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/OnBoardingActivityTheme" />
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashActivityTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,8 +38,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
