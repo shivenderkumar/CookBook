@@ -29,7 +29,7 @@ public class UploadFragment extends Fragment {
 
         Fragment fragment_camerax = new CamerXFragment();
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.parent_fragment_container, fragment_camerax).commit();
+        fragmentTransaction.add(R.id.parent_fragment_container, fragment_camerax,"TAG_FARGMENT_CAMERAX").setReorderingAllowed(true).commit();
 
         return root;
     }

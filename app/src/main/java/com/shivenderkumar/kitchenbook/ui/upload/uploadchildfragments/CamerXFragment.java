@@ -4,15 +4,18 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.os.Environment;
@@ -34,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 public class CamerXFragment extends Fragment {
 
     Button btn_takepicture;
-    ImageButton imageButton_back, imageButton_close, imageButton_check;
+    ImageButton imageButton_back;
 
     ///CameraX
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -42,13 +45,13 @@ public class CamerXFragment extends Fragment {
 
     ImageCapture imageCapture;
 
-    File f;
-    ImageView imageview_preview;
-    //////////
+    ImageProxy imageProxy;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        System.out.println("ZZZZZZZZZZZZZZZ ONCREATEVIEW CAMERAXFRAGMENT CALLED");
+
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_camer_x, container, false);
 
@@ -101,61 +104,28 @@ public class CamerXFragment extends Fragment {
     }
 
     void btn_takepictureClick() {
-        imageButton_back.setVisibility(View.GONE);
-        imageButton_close.setVisibility(View.VISIBLE);
-        imageButton_check.setVisibility(View.VISIBLE);
-        btn_takepicture.setVisibility(View.GONE);
 
-        File file = new File(Environment.getExternalStorageDirectory() + "/pic.jpeg");
-        f = file;
+        imageCapture.takePicture(ContextCompat.getMainExecutor(getContext()),new ImageCapture.OnImageCapturedCallback(){
+            @Override
+            public void onCaptureSuccess(@NonNull ImageProxy image) {
+                imageProxy = image;
+                makeFragmentTransaction(imageProxy);
+                super.onCaptureSuccess(image);
+            }
 
-        ImageCapture.OutputFileOptions outputFileOptions =
-                new ImageCapture.OutputFileOptions.Builder(file).build();
-
-        imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(getContext()),
-                new ImageCapture.OnImageSavedCallback() {
-
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        // insert your code here.
-
-                        imageview_preview.setVisibility(View.VISIBLE);
-                        if (file.exists()) {
-                            imageview_preview.setImageURI(Uri.fromFile(file));
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        // insert your code here.
-                        System.out.println("EXCEPTION ERROR : " + exception.getMessage());
-                    }
-                });
+            @Override
+            public void onError(@NonNull ImageCaptureException exception) {
+                System.out.println("EEEEEEEEEEEEEE ERROR IN TAKE PUCTURE ON IMAGECAPTURES CALLBACK");
+                super.onError(exception);
+            }
+        });
 
     }
 
-    void saveCaptureImageUseCase() {
-        imageview_preview.setVisibility(View.GONE);
-
-        imageButton_back.setVisibility(View.VISIBLE);
-        imageButton_close.setVisibility(View.GONE);
-        imageButton_check.setVisibility(View.GONE);
-        btn_takepicture.setVisibility(View.VISIBLE);
-
-        Toast.makeText(getContext(), "IMAGE FILE : " + f.getName(), Toast.LENGTH_LONG).show();
-
-    }
-
-    void imageButton_closeClick() {
-        imageview_preview.setVisibility(View.INVISIBLE);
-
-        imageButton_back.setVisibility(View.VISIBLE);
-        imageButton_close.setVisibility(View.GONE);
-        imageButton_check.setVisibility(View.GONE);
-        btn_takepicture.setVisibility(View.VISIBLE);
-
-        f.delete();
+    void makeFragmentTransaction(ImageProxy imageProxy){
+        Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.parent_fragment_container, fragment_camerax_imagecaptured,"TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
 
     }
 
@@ -165,10 +135,6 @@ public class CamerXFragment extends Fragment {
 
         btn_takepicture = root.findViewById(R.id.btn_takepicture);
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
-        imageButton_close = root.findViewById(R.id.imageview_upload_close);
-        imageButton_check = root.findViewById(R.id.imageview_upload_check);
-
-        imageview_preview = root.findViewById(R.id.imageview_preview);
 
     }
 
@@ -180,13 +146,6 @@ public class CamerXFragment extends Fragment {
             }
         });
 
-        imageButton_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageButton_closeClick();
-            }
-        });
-
         btn_takepicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,16 +153,81 @@ public class CamerXFragment extends Fragment {
             }
         });
 
-        imageButton_check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveCaptureImageUseCase();
-            }
-        });
     }
 
     void imageButton_backClick() {
         getActivity().onBackPressed();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
+    public void onPause() {
+        System.out.println("ZZZZZZZZZZZZZZZ ON PAUSE CAMERAXFRAGMENT CALLED");
+        super.onPause();
+    }
+
+
+    @Override
+    public void onResume() {
+        System.out.println("ZZZZZZZZZZZZZZZ ON RESUME CAMERAXFRAGMENT CALLED");
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        System.out.println("ZZZZZZZZZZZZZZZ ON START CAMERAXFRAGMENT CALLED");
+
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        System.out.println("ZZZZZZZZZZZZZZZ ON STOP CAMERAXFRAGMENT CALLED");
+
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        System.out.println("ZZZZZZZZZZZZZZZ ONDESTROYVIEW CAMERAXFRAGMENT CALLED");
+        super.onDestroyView();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        System.out.println("ZZZZZZZZZZZZZZZ ON DESTROY CAMERAXFRAGMENT CALLED");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        System.out.println("ZZZZZZZZZZZZZZZ ON CREATE CAMERAXFRAGMENT CALLED");
+        super.onCreate(savedInstanceState);
     }
 
 }

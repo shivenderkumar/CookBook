@@ -22,14 +22,6 @@
         android:layout_marginBottom="28dp"
         android:text="@string/take_picture" />
 
-    <ImageView
-        android:id="@+id/imageview_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:scaleType="fitCenter"
-        android:visibility="invisible" />
-
     <ImageButton
         android:id="@+id/imageview_upload_back"
         android:layout_width="40dp"
@@ -38,29 +30,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_arrow_left_white_24"
-        android:visibility="visible" />
-
-    <ImageButton
-        android:id="@+id/imageview_upload_close"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="top |left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_clear_white_24"
-        android:visibility="gone" />
-
-    <ImageButton
-        android:id="@+id/imageview_upload_check"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="top |right"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_check_24"
-        android:visibility="gone" />
+        android:src="@drawable/ic_baseline_arrow_left_white_24"/>
 
 </FrameLayout>
