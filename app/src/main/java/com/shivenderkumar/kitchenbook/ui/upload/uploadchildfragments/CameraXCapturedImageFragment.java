@@ -22,7 +22,7 @@ import java.io.File;
 public class CameraXCapturedImageFragment extends Fragment {
 
     File file_image;
-    ImageButton imageButton_back, imageButton_close, imageButton_check;
+    ImageButton imageButton_close, imageButton_check;
     ImageView imageview_preview;
 
     boolean flag_backpressed = true;
@@ -31,10 +31,42 @@ public class CameraXCapturedImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         System.out.println("YYYYYYYYYYYYYYY ONCREATEVIEW CAMERAX IMAGE CAPTUREDFRAGMENT CALLED");
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera_x_captured_image, container, false);
 
+        changeActivityOnBackPressedFuntionality();
+
+        init(view);
+        setOnClickListeners();
+
+        return view;
+    }
+
+    private void init(View root){
+        imageButton_check = root.findViewById(R.id.imageview_upload_check);
+        imageButton_close = root.findViewById(R.id.imageview_upload_close);
+        imageview_preview = root.findViewById(R.id.imageview_preview);
+    }
+
+    private void setOnClickListeners() {
+        imageButton_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        imageButton_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+
+    void changeActivityOnBackPressedFuntionality(){
         //implement on back pressed for fragment
         getActivity().getOnBackPressedDispatcher().addCallback((LifecycleOwner) this, new OnBackPressedCallback(true) {
             @Override
@@ -54,10 +86,7 @@ public class CameraXCapturedImageFragment extends Fragment {
             }
         });
         ////////////////////////////////////////
-
-        return view;
     }
-
 
     @Override
     public void onPause() {
