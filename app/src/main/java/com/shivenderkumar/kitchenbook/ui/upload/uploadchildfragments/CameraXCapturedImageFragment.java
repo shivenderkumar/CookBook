@@ -1,8 +1,10 @@
 package com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -59,7 +61,9 @@ public class CameraXCapturedImageFragment extends Fragment {
         imageButton_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Fragment fragment_uploadRecipe = new UploadRecipeFragment();
+                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.parent_fragment_container,fragment_uploadRecipe,"TAG_FRAGMENT_UPLOAD_RECIPE").commit();
             }
         });
 
@@ -74,7 +78,7 @@ public class CameraXCapturedImageFragment extends Fragment {
                 if( flag_backpressed == true){   // backpressed callback flag true -> change backpressed to back to cameraxpreview fragment
                     // in here you can do logic when backPress is clicked
                     //flag_backpressed = false;
-                    Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
+                   // Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
                     FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                     fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
 
@@ -132,4 +136,17 @@ public class CameraXCapturedImageFragment extends Fragment {
         System.out.println("YYYYYYYYYYYYYYY ON CREATE CAMERAX IMAGE CAPTUREDFRAGMENT CALLED");
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        System.out.println("YYYYYYYYYYYYYYY ON ATTACH CAMERAX IMAGE CAPTUREDFRAGMENT CALLED");
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        System.out.println("YYYYYYYYYYYYYYY ON DEATCH CAMERAX IMAGE CAPTUREDFRAGMENT CALLED");
+        super.onDetach();
+    }
+
 }

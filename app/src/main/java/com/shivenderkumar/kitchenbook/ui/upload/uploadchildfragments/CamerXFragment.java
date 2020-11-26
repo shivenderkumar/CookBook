@@ -110,12 +110,14 @@ public class CamerXFragment extends Fragment {
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 imageProxy = image;
                 makeFragmentTransaction(imageProxy);
-                super.onCaptureSuccess(image);
+                image.close();
+                // super.onCaptureSuccess(image);
+
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                System.out.println("EEEEEEEEEEEEEE ERROR IN TAKE PUCTURE ON IMAGECAPTURES CALLBACK");
+                System.out.println("EEEEEEEEEEEEEE ERROR IN TAKE PUCTURE ON IMAGECAPTURES CALLBACK : "+exception.getMessage());
                 super.onError(exception);
             }
         });
