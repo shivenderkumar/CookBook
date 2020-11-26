@@ -1,6 +1,5 @@
 package com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments;
 
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,21 +16,18 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.shivenderkumar.kitchenbook.R;
+import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewModel;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 public class CamerXFragment extends Fragment {
@@ -45,7 +41,10 @@ public class CamerXFragment extends Fragment {
 
     ImageCapture imageCapture;
 
-    ImageProxy imageProxy;
+    private ImageProxy imageProxy;
+
+    // fragment communication MutableLivedata
+    private ImageProxyViewModel imageProxyViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +58,8 @@ public class CamerXFragment extends Fragment {
         setClickListeners();
 
         init_preview_imagecamera_usecase(root);
+
+
 
         return  root;
     }
@@ -125,9 +126,20 @@ public class CamerXFragment extends Fragment {
     }
 
     void makeFragmentTransaction(ImageProxy imageProxy){
+
+        setImageProxyToMLD();
+
+        System.out.println("ZZZZZZZZZZZZZZZ NEW IMAGE PROXY IS SET IMAGEPROXY : "+imageProxy.toString()+" // MLD :"+imageProxyViewModel.getMutableLiveDataIP().toString());
+
         Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.parent_fragment_container, fragment_camerax_imagecaptured,"TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
+
+    }
+
+    private void setImageProxyToMLD() {
+        imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
+        imageProxyViewModel.setMutableLiveDataIP(imageProxy);
 
     }
 

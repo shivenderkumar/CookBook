@@ -6,9 +6,11 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.ImageProxy;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.shivenderkumar.kitchenbook.R;
-import com.shivenderkumar.kitchenbook.ui.upload.UploadFragment;
+import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewModel;
 
 import java.io.File;
 
@@ -28,6 +30,10 @@ public class CameraXCapturedImageFragment extends Fragment {
     ImageView imageview_preview;
 
     boolean flag_backpressed = true;
+
+    // fragment communication MutableLivedata
+    private ImageProxyViewModel imageProxyViewModel;
+    private ImageProxy imageProxy;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +47,18 @@ public class CameraXCapturedImageFragment extends Fragment {
         init(view);
         setOnClickListeners();
 
+        observeImageProxyViewModel();
+
         return view;
+    }
+
+    private void observeImageProxyViewModel() {
+        imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
+        imageProxyViewModel.getMutableLiveDataIP().observe(getViewLifecycleOwner(), imageProxy1 -> {
+            // get latest image captured by cameraX fragment
+            System.out.println("YYYYYYYYYYYYYYY CAMERAX IMAGE CAPTUREDFRAGMENT NEW IMAGE PROXY CAPTURED IS OBSERVED IMAGEPROXY : "+ imageProxy1.toString()+" //// MLD "+imageProxyViewModel.getMutableLiveDataIP().toString());
+
+        });
     }
 
     private void init(View root){
@@ -64,6 +81,7 @@ public class CameraXCapturedImageFragment extends Fragment {
                 Fragment fragment_uploadRecipe = new UploadRecipeFragment();
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.add(R.id.parent_fragment_container,fragment_uploadRecipe,"TAG_FRAGMENT_UPLOAD_RECIPE").commit();
+
             }
         });
 
@@ -91,6 +109,8 @@ public class CameraXCapturedImageFragment extends Fragment {
         });
         ////////////////////////////////////////
     }
+
+
 
     @Override
     public void onPause() {
