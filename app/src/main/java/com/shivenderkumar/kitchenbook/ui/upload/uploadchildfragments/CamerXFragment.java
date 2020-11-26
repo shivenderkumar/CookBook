@@ -111,8 +111,8 @@ public class CamerXFragment extends Fragment {
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 imageProxy = image;
                 makeFragmentTransaction(imageProxy);
-                image.close();
-                // super.onCaptureSuccess(image);
+                //image.close();
+                 super.onCaptureSuccess(image);
 
             }
 
