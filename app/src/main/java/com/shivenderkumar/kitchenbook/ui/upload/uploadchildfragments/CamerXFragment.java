@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -59,8 +60,6 @@ public class CamerXFragment extends Fragment {
 
         init_preview_imagecamera_usecase(root);
 
-
-
         return  root;
     }
 
@@ -68,7 +67,7 @@ public class CamerXFragment extends Fragment {
         ///camera X
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
 
-        previewView = root.findViewById(R.id.previewView);
+      //  previewView = root.findViewById(R.id.previewView);
 
         cameraProviderFuture.addListener(() -> {
             try {
@@ -111,8 +110,8 @@ public class CamerXFragment extends Fragment {
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 imageProxy = image;
                 makeFragmentTransaction(imageProxy);
-                //image.close();
-                 super.onCaptureSuccess(image);
+               // image.close();
+                super.onCaptureSuccess(image);
 
             }
 
@@ -149,6 +148,8 @@ public class CamerXFragment extends Fragment {
 
         btn_takepicture = root.findViewById(R.id.btn_takepicture);
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
+
+        previewView = root.findViewById(R.id.previewView);
 
     }
 

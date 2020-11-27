@@ -130,6 +130,7 @@ public class CameraXCapturedImageFragment extends Fragment {
                     FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                     fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
 
+
                 }
                 else{  // backpressed callback flag false -> change backpressed to back to activity normal behaviour backpressed
                     flag_backpressed = false;
