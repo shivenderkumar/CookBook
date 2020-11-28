@@ -25,6 +25,7 @@ import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewMo
 
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class CameraXCapturedImageFragment extends Fragment {
 
@@ -45,7 +46,6 @@ public class CameraXCapturedImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camera_x_captured_image, container, false);
 
         init(view);
-      //  ftRemoveCameraXF();
         setOnClickListeners();
         observeImageProxyViewModel();
         changeActivityOnBackPressedFuntionality();
@@ -57,11 +57,6 @@ public class CameraXCapturedImageFragment extends Fragment {
         imageButton_check = root.findViewById(R.id.imageview_upload_check);
         imageButton_close = root.findViewById(R.id.imageview_upload_close);
         imageview_preview = root.findViewById(R.id.imageview_preview);
-    }
-
-    private void ftRemoveCameraXF() {
-        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-        fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FARGMENT_CAMERAX")).commit();
     }
 
     private void setOnClickListeners() {
@@ -94,27 +89,23 @@ public class CameraXCapturedImageFragment extends Fragment {
 
     }
 
-
-
     private void observeImageProxyViewModel() {
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
         imageProxyViewModel.getMutableLiveDataIP().observe(getViewLifecycleOwner(), imageProxy1 -> {
-            // get latest image captured by cameraX fragment
-            System.out.println("YYYYYYYYYYYYYYY CAMERAX IMAGE CAPTUREDFRAGMENT NEW IMAGE PROXY CAPTURED IS OBSERVED IMAGEPROXY : "+ imageProxy1.toString()+" //// MLD "+imageProxyViewModel.getMutableLiveDataIP().toString());
             setImageProxyToImageView(imageProxy1);
         });
     }
 
     private void setImageProxyToImageView(ImageProxy imageProxy1) {
-        System.out.println("YYYYYYYYYYYYYYY CAMERAX IMAGE CAPTUREDFRAGMENT SET IMAGE TO BITMAP OF IMAGE PROXY : "+ imageProxy1.toString()+" //// MLD "+imageProxyViewModel.getMutableLiveDataIP().toString());
-
         imageProxy = imageProxy1;
         setImageView();
     }
 
     private void setImageView() {
         if(imageProxy != null){
-            imageview_preview.setImageBitmap(imageProxyToBitMap(imageProxy));
+            Bitmap bitmap = imageProxyToBitMap(imageProxy);
+            imageProxyViewModel.setImage_bitmap(bitmap);
+            imageview_preview.setImageBitmap(bitmap);
         }
         else {
             return;
@@ -135,18 +126,35 @@ public class CameraXCapturedImageFragment extends Fragment {
             public void handleOnBackPressed() {
                 if( flag_backpressed == true){   // backpressed callback flag true -> change backpressed to back to cameraxpreview fragment
                     // in here you can do logic when backPress is clicked
-//                    FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-//                    fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
                     ftReplaceCameraXF();
                 }
                 else{  // backpressed callback flag false -> change backpressed to back to activity normal behaviour backpressed
                     flag_backpressed = false;
-                 //   getActivity().onBackPressed();
                     ftReplaceCameraXF();
                 }
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
