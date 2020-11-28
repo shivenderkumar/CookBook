@@ -55,6 +55,7 @@ public class UploadFragment extends Fragment {
         navView.setVisibility(View.VISIBLE);
         super.onDestroyView();
     }
+
 }
 
 

@@ -28,7 +28,6 @@ import java.nio.ByteBuffer;
 
 public class CameraXCapturedImageFragment extends Fragment {
 
-    File file_image;
     ImageButton imageButton_close, imageButton_check;
     ImageView imageview_preview;
 
@@ -45,17 +44,57 @@ public class CameraXCapturedImageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera_x_captured_image, container, false);
 
-        changeActivityOnBackPressedFuntionality();
-
         init(view);
+      //  ftRemoveCameraXF();
         setOnClickListeners();
-
         observeImageProxyViewModel();
-
-       // setImageView();
+        changeActivityOnBackPressedFuntionality();
 
         return view;
     }
+
+    private void init(View root){
+        imageButton_check = root.findViewById(R.id.imageview_upload_check);
+        imageButton_close = root.findViewById(R.id.imageview_upload_close);
+        imageview_preview = root.findViewById(R.id.imageview_preview);
+    }
+
+    private void ftRemoveCameraXF() {
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FARGMENT_CAMERAX")).commit();
+    }
+
+    private void setOnClickListeners() {
+        imageButton_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ftReplaceCameraXF();
+            }
+        });
+
+        imageButton_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ftAddUploadRecipeF();
+            }
+        });
+    }
+
+    private void ftReplaceCameraXF(){
+        Fragment fragment_camerax = new CamerXFragment();
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.parent_fragment_container, fragment_camerax,"TAG_FARGMENT_CAMERAX").commit();
+
+    }
+
+    private void ftAddUploadRecipeF() {
+        Fragment fragment_uploadRecipe = new UploadRecipeFragment();
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.parent_fragment_container,fragment_uploadRecipe,"TAG_FRAGMENT_UPLOAD_RECIPE").commit();
+
+    }
+
+
 
     private void observeImageProxyViewModel() {
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
@@ -63,7 +102,6 @@ public class CameraXCapturedImageFragment extends Fragment {
             // get latest image captured by cameraX fragment
             System.out.println("YYYYYYYYYYYYYYY CAMERAX IMAGE CAPTUREDFRAGMENT NEW IMAGE PROXY CAPTURED IS OBSERVED IMAGEPROXY : "+ imageProxy1.toString()+" //// MLD "+imageProxyViewModel.getMutableLiveDataIP().toString());
             setImageProxyToImageView(imageProxy1);
-
         });
     }
 
@@ -71,7 +109,6 @@ public class CameraXCapturedImageFragment extends Fragment {
         System.out.println("YYYYYYYYYYYYYYY CAMERAX IMAGE CAPTUREDFRAGMENT SET IMAGE TO BITMAP OF IMAGE PROXY : "+ imageProxy1.toString()+" //// MLD "+imageProxyViewModel.getMutableLiveDataIP().toString());
 
         imageProxy = imageProxy1;
-        //imageview_preview.setImageBitmap(imageProxyToBitMap(imageProxy1));
         setImageView();
     }
 
@@ -91,33 +128,6 @@ public class CameraXCapturedImageFragment extends Fragment {
         return BitmapFactory.decodeByteArray(bytes,0,bytes.length,null);
     }
 
-    private void init(View root){
-        imageButton_check = root.findViewById(R.id.imageview_upload_check);
-        imageButton_close = root.findViewById(R.id.imageview_upload_close);
-        imageview_preview = root.findViewById(R.id.imageview_preview);
-    }
-
-    private void setOnClickListeners() {
-        imageButton_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        imageButton_check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment_uploadRecipe = new UploadRecipeFragment();
-                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.parent_fragment_container,fragment_uploadRecipe,"TAG_FRAGMENT_UPLOAD_RECIPE").commit();
-
-            }
-        });
-
-    }
-
-
     void changeActivityOnBackPressedFuntionality(){
         //implement on back pressed for fragment
         getActivity().getOnBackPressedDispatcher().addCallback((LifecycleOwner) this, new OnBackPressedCallback(true) {
@@ -125,23 +135,22 @@ public class CameraXCapturedImageFragment extends Fragment {
             public void handleOnBackPressed() {
                 if( flag_backpressed == true){   // backpressed callback flag true -> change backpressed to back to cameraxpreview fragment
                     // in here you can do logic when backPress is clicked
-                    //flag_backpressed = false;
-                   // Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
-                    FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                    fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
-
-
+//                    FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+//                    fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
+                    ftReplaceCameraXF();
                 }
                 else{  // backpressed callback flag false -> change backpressed to back to activity normal behaviour backpressed
                     flag_backpressed = false;
-                    getActivity().onBackPressed();
+                 //   getActivity().onBackPressed();
+                    ftReplaceCameraXF();
                 }
             }
         });
-        ////////////////////////////////////////
     }
 
 
+
+    ////////////////////////////////////////
 
     @Override
     public void onPause() {

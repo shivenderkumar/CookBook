@@ -78,11 +78,18 @@ public class UploadRecipeFragment extends Fragment {
                 // upload image
 
                 //back to cameraX -> remove upload_fragment and remove cameraX_capturedImageFragment
-                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_UPLOAD_RECIPE")).commit();
-
+                ftRemoveCameraXImageCapturedRemoveUploadRecipeFAddCameraXF();
             }
         });
+    }
+
+    private void ftRemoveCameraXImageCapturedRemoveUploadRecipeFAddCameraXF(){
+        Fragment fragment_camerax = new CamerXFragment();
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction
+                .remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED"))
+                .remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_UPLOAD_RECIPE"))
+                .add(R.id.parent_fragment_container,fragment_camerax,"TAG_FARGMENT_CAMERAX").commit();
     }
 
     @Override

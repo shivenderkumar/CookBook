@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.shivenderkumar.kitchenbook.R;
+import com.shivenderkumar.kitchenbook.ui.upload.UploadFragment;
 import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewModel;
 
 import java.util.concurrent.ExecutionException;
@@ -56,17 +57,51 @@ public class CamerXFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_camer_x, container, false);
 
         init(root);
+      //  ftRemoveCameraXIFifExists();
         setClickListeners();
-
         init_preview_imagecamera_usecase(root);
 
         return  root;
     }
 
+    void init(View root) {
+        btn_takepicture = root.findViewById(R.id.btn_takepicture);
+        imageButton_back = root.findViewById(R.id.imageview_upload_back);
+        previewView = root.findViewById(R.id.previewView);
+    }
+
+    private void ftRemoveCameraXIFifExists(){
+        try{
+            if(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").isAdded()){
+                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+                fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
+            }
+
+        }catch (Exception e){
+            System.out.println("EEEEEEEEEEEEEE ERROR IN FTREMOVECAMERXIFEXISTS : "+e.getMessage());
+        }
+    }
+
+    void setClickListeners() {
+        imageButton_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageButton_backClick();
+            }
+        });
+
+        btn_takepicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_takepictureClick();
+            }
+        });
+
+    }
+
     private void init_preview_imagecamera_usecase(View root) {
         ///camera X
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-
       //  previewView = root.findViewById(R.id.previewView);
 
         cameraProviderFuture.addListener(() -> {
@@ -89,7 +124,6 @@ public class CamerXFragment extends Fragment {
                         .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                         .build();
 
-
                 Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, imageCapture, preview);
 
             } catch (ExecutionException | InterruptedException e) {
@@ -99,8 +133,6 @@ public class CamerXFragment extends Fragment {
             }
         }, ContextCompat.getMainExecutor(getContext()));
 
-        //////////
-
     }
 
     void btn_takepictureClick() {
@@ -109,10 +141,9 @@ public class CamerXFragment extends Fragment {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 imageProxy = image;
-                makeFragmentTransaction(imageProxy);
+                makeFragmentTransaction();
                // image.close();
-                super.onCaptureSuccess(image);
-
+               // super.onCaptureSuccess(image);
             }
 
             @Override
@@ -124,55 +155,34 @@ public class CamerXFragment extends Fragment {
 
     }
 
-    void makeFragmentTransaction(ImageProxy imageProxy){
-
+    void makeFragmentTransaction(){
         setImageProxyToMLD();
-
-        System.out.println("ZZZZZZZZZZZZZZZ NEW IMAGE PROXY IS SET IMAGEPROXY : "+imageProxy.toString()+" // MLD :"+imageProxyViewModel.getMutableLiveDataIP().toString());
-
-        Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
-        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.parent_fragment_container, fragment_camerax_imagecaptured,"TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
-
+        ftReplaceCameraXCIF();
     }
 
     private void setImageProxyToMLD() {
+      //  System.out.println("ZZZZZZZZZZZZZZZ NEW IMAGE PROXY IS SET IMAGEPROXY : "+imageProxy.toString()+" // MLD :"+imageProxyViewModel.getMutableLiveDataIP().toString());
+
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
         imageProxyViewModel.setMutableLiveDataIP(imageProxy);
-
     }
 
-    ////////////////////////
+    void ftReplaceCameraXCIF(){
+        setImageProxyToMLD();
+        System.out.println("ZZZZZZZZZZZZZZZ FT to CAMERAXCAPTUREDIMAGE FRAGMENT FROM CAMERAX FRAGMENT");
 
-    void init(View root) {
-
-        btn_takepicture = root.findViewById(R.id.btn_takepicture);
-        imageButton_back = root.findViewById(R.id.imageview_upload_back);
-
-        previewView = root.findViewById(R.id.previewView);
-
-    }
-
-    void setClickListeners() {
-        imageButton_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageButton_backClick();
-            }
-        });
-
-        btn_takepicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn_takepictureClick();
-            }
-        });
+        Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.parent_fragment_container, fragment_camerax_imagecaptured,"TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
 
     }
 
     void imageButton_backClick() {
         getActivity().onBackPressed();
     }
+
+
+
 
 
 
