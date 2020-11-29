@@ -7,36 +7,115 @@
     android:background="@color/white"
     tools:context=".ui.upload.uploadchildfragments.UploadRecipeFragment">
 
-
     <ImageButton
         android:id="@+id/imagebutton_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:backgroundTint="@color/white"
         android:src="@drawable/ic_baseline_arrow_left_24"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/imageview_upload"/>
+        app:layout_constraintBottom_toTopOf="@id/nestedScrollView"/>
+    <!--/////////////////////////////////// -->
 
-    <ImageView
-        android:id="@+id/imageview_upload"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scaleType="fitCenter"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagebutton_back"
-        app:layout_constraintBottom_toTopOf="@id/button_upload"/>
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <!-- TODO: Update blank fragment layout -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageview_upload"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <include
+                android:id="@+id/form_layout_recipename"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageview_upload"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_about"/>
+
+            <include
+                android:id="@+id/form_layout_about"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageview_upload"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_ingredients"/>
+
+            <include
+                android:id="@+id/form_layout_ingredients"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_layout_about"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_steps"/>
+
+            <include
+                android:id="@+id/form_layout_steps"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_layout_ingredients"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_total_cook_time"/>
+
+            <include
+                android:id="@+id/form_layout_total_cook_time"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_layout_steps"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_tags"/>
+
+            <include
+                android:id="@+id/form_layout_tags"
+                layout="@layout/form_text_editview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_layout_total_cook_time"
+                app:layout_constraintBottom_toTopOf="@+id/form_layout_recipename"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!--/////////////////////////////////// -->
     <Button
         android:id="@+id/button_upload"
         android:text="Upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <View
+        android:background="@drawable/gradient_white"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/button_upload"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

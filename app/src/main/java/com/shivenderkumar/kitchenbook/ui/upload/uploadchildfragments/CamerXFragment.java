@@ -45,7 +45,7 @@ public class CamerXFragment extends Fragment {
 
     private ImageProxy imageProxy;
 
-    // fragment communication MutableLivedata
+    // fragment communication MutableLivedata                       
     private ImageProxyViewModel imageProxyViewModel;
 
     @Override
