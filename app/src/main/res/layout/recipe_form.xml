@@ -1,135 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:background="@color/white"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/textview_recipename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:fontFamily="@font/droid_sans_bold"
+                android:text="Recipe Name"
+                android:textColor="@color/gray_text" />
 
-                <TextView
-                    android:id="@+id/textview_recipename"
-                    android:text="Recipe Name"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/gray_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp" />
+            <EditText
+                android:id="@+id/edittext_recipename"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/droid_sans"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="@color/gray_text"
+                android:textSize="13sp"/>
 
-                <EditText
-                    android:id="@+id/edittext_recipename"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/white"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false" />
+        </TableRow>
 
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/textview_about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/droid_sans_bold"
+                android:text="About"
+                android:textColor="@color/gray_text" />
 
-                <TextView
-                    android:id="@+id/textview_about"
-                    android:text="About"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/gray_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/edittext_about"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/droid_sans"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="@color/gray_text"
+                android:textSize="13sp"/>
+        </TableRow>
 
-                <EditText
-                    android:id="@+id/edittext_about"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/white"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/textview_Ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/droid_sans_bold"
+                android:text="Ingredients"
+                android:textColor="@color/gray_text" />
 
-                <TextView
-                    android:id="@+id/textview_Ingredients"
-                    android:text="Ingredients"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/gray_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/edittext_Ingredients"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/droid_sans"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="@color/gray_text"
+                android:textSize="13sp"/>
+        </TableRow>
 
-                <EditText
-                    android:id="@+id/edittext_Ingredients"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/white"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/textview_Steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/droid_sans_bold"
+                android:singleLine="false"
+                android:text="Steps"
+                android:textColor="@color/gray_text" />
 
-                <TextView
-                    android:id="@+id/textview_Steps"
-                    android:text="Steps"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/gray_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false" />
+            <EditText
+                android:id="@+id/edittext_Steps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/droid_sans"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="@color/gray_text"
+                android:textSize="13sp"/>
+        </TableRow>
 
-                <EditText
-                    android:id="@+id/edittext_Steps"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/white"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/textview_Tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/droid_sans_bold"
+                android:singleLine="false"
+                android:text="Tags"
+                android:textColor="@color/gray_text" />
 
-                <TextView
-                    android:id="@+id/textview_Tags"
-                    android:text="Tags"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/gray_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false" />
+            <EditText
+                android:id="@+id/edittext_Tags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="@color/gray_text"
+                android:fontFamily="@font/droid_sans"
+                android:textSize="13sp"
+                />
+        </TableRow>
 
-                <EditText
-                    android:id="@+id/edittext_Tags"
-                    android:fontFamily="@font/droid_sans"
-                    android:textColor="@color/white"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false" />
-            </TableRow>
+    </TableLayout>
 
-        </TableLayout>
-
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

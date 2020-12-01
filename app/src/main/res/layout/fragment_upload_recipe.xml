@@ -27,11 +27,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagebutton_back"
-        app:layout_constraintBottom_toBottomOf="@id/button_upload">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/imageview_upload"
@@ -44,157 +44,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <TextView
-                android:id="@+id/textview_recipename"
-                android:text="Recipe Name"
+            <include
+                android:id="@+id/layout_recipe_form"
+                layout="@layout/recipe_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/gray_text"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageview_upload"
-                />
+                app:layout_constraintTop_toBottomOf="@id/imageview_upload"
+                app:layout_constraintBottom_toTopOf="@id/view_empty"/>
 
-            <EditText
-                android:id="@+id/edittext_recipename"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edittext"
+            <View
+                android:id="@+id/view_empty"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:paddingVertical="5dp"
-                android:layout_marginHorizontal="15dp"
+                android:layout_height="35dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_recipename"
-                />
-
-
-            <TextView
-                android:id="@+id/textview_about"
-                android:text="About"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/gray_text"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edittext_recipename"
-                />
-
-            <EditText
-                android:id="@+id/edittext_about"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:paddingVertical="5dp"
-                android:layout_marginHorizontal="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_about"
-                />
-
-            <TextView
-                android:id="@+id/textview_Ingredients"
-                android:text="Ingredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/gray_text"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edittext_about"
-                />
-
-            <EditText
-                android:id="@+id/edittext_Ingredients"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:paddingVertical="5dp"
-                android:layout_marginHorizontal="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_Ingredients"
-                />
-
-            <TextView
-                android:id="@+id/textview_Steps"
-                android:text="Steps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/gray_text"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edittext_Ingredients"
-                />
-
-            <EditText
-                android:id="@+id/edittext_Steps"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:paddingVertical="5dp"
-                android:layout_marginHorizontal="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_Steps"
-                />
-
-            <TextView
-                android:id="@+id/textview_Tags"
-                android:text="Tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/gray_text"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edittext_Steps"
-                />
-
-            <EditText
-                android:id="@+id/edittext_Tags"
-                android:fontFamily="@font/droid_sans"
-                android:textColor="@color/white"
-                android:background="@drawable/shape_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:paddingVertical="5dp"
-                android:layout_marginBottom="100dp"
-                android:layout_marginHorizontal="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textview_Tags"
-                />
+                app:layout_constraintTop_toBottomOf="@id/layout_recipe_form"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
