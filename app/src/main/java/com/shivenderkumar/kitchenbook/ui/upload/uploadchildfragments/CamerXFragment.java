@@ -122,12 +122,18 @@ public class CamerXFragment extends Fragment {
         if( !imageView_flashButton.isActivated()){
             imageView_flashButton.setActivated(true);
             imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_on_white_24));
+            if(imageCapture != null){
+               imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
+            }
            // System.out.println("SSSSSSSSSSSSS FLASH STATE : TRUE PRESSED FLASH ON "+imageView_flashButton.isActivated());
         }
         else{
             imageView_flashButton.setActivated(false);
             imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_off_white_24));
            // System.out.println("SSSSSSSSSSSSS FLASH STATE : NOT FALSE PRESSED FLASH OFF "+imageView_flashButton.isActivated());
+            if(imageCapture != null){
+                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
+            }
         }
     }
 
@@ -149,6 +155,7 @@ public class CamerXFragment extends Fragment {
                 // imagecapture use case
                 imageCapture = new ImageCapture.Builder()
                         .setTargetRotation(root.getDisplay().getRotation())
+                        .setFlashMode(ImageCapture.FLASH_MODE_OFF)
                         .build();
 
                 // camera selector
