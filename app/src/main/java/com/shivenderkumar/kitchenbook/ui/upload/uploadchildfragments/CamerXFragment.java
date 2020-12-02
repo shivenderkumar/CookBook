@@ -41,17 +41,13 @@ public class CamerXFragment extends Fragment {
     ///CameraX
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
-
     ImageCapture imageCapture;
-
     private ImageProxy imageProxy;
 
     // fragment communication MutableLivedata                       
     private ImageProxyViewModel imageProxyViewModel;
 
-    //transparent Imageview
-    ImageView imageView_top, imageView_bottom;
-
+    ImageView imageView_top, imageView_bottom, imageView_flashButton;
     int sqaureWidth;
 
     @Override
@@ -74,6 +70,7 @@ public class CamerXFragment extends Fragment {
         btn_takepicture = root.findViewById(R.id.btn_takepicture);
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
         previewView = root.findViewById(R.id.previewView);
+        imageView_flashButton = root.findViewById(R.id.btn_flashmode);
         imageView_top = root.findViewById(R.id.imageview_top);
         imageView_bottom = root.findViewById(R.id.imageview_bottom);
 
@@ -91,10 +88,10 @@ public class CamerXFragment extends Fragment {
     int getSqaureWidth(){
         int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
         int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-//        System.out.println(" Activity WIDHT WIDHT WIDHT :"+activityWidth +" /// Activity HEIGHT HEIGHT HEIGHT :"+activityHeight);
+
         activityWidth = activityWidth / 2;
         activityHeight = activityHeight / 2;
-//        System.out.println("SQUARE WIDHT WIDHT WIDHT :"+sqaureWidth );
+
         return activityHeight - activityWidth -24;      // statusbar height is 24 according to google guidelines
     }
 
@@ -112,7 +109,26 @@ public class CamerXFragment extends Fragment {
                 btn_takepictureClick();
             }
         });
+        imageView_flashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeFlashMode();
+            }
+        });
 
+    }
+
+    private void changeFlashMode() {
+        if( !imageView_flashButton.isActivated()){
+            imageView_flashButton.setActivated(true);
+            imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_on_white_24));
+           // System.out.println("SSSSSSSSSSSSS FLASH STATE : TRUE PRESSED FLASH ON "+imageView_flashButton.isActivated());
+        }
+        else{
+            imageView_flashButton.setActivated(false);
+            imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_off_white_24));
+           // System.out.println("SSSSSSSSSSSSS FLASH STATE : NOT FALSE PRESSED FLASH OFF "+imageView_flashButton.isActivated());
+        }
     }
 
     private void init_preview_imagecamera_usecase(View root) {
