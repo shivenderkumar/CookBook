@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.shivenderkumar.kitchenbook.R;
@@ -48,6 +49,11 @@ public class CamerXFragment extends Fragment {
     // fragment communication MutableLivedata                       
     private ImageProxyViewModel imageProxyViewModel;
 
+    //transparent Imageview
+    ImageView imageView_top, imageView_bottom;
+
+    int sqaureWidth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class CamerXFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_camer_x, container, false);
 
         init(root);
-      //  ftRemoveCameraXIFifExists();
+        displayTransparentImageView();
         setClickListeners();
         init_preview_imagecamera_usecase(root);
 
@@ -68,18 +74,28 @@ public class CamerXFragment extends Fragment {
         btn_takepicture = root.findViewById(R.id.btn_takepicture);
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
         previewView = root.findViewById(R.id.previewView);
+        imageView_top = root.findViewById(R.id.imageview_top);
+        imageView_bottom = root.findViewById(R.id.imageview_bottom);
+
     }
 
-    private void ftRemoveCameraXIFifExists(){
-        try{
-            if(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").isAdded()){
-                FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-                fragmentTransaction.remove(getParentFragmentManager().findFragmentByTag("TAG_FRAGMENT_CAMERAX_IMAGECAPTURED")).commit();
-            }
+    void displayTransparentImageView() {
+        sqaureWidth = getSqaureWidth();
+        imageView_top.getLayoutParams().height = sqaureWidth;
+        imageView_bottom.getLayoutParams().height = sqaureWidth;
+        System.out.println(" SCREEN NEW HEIGHT WIDHT WIDHT WIDHT :"+(sqaureWidth+24));
+        imageView_top.invalidate();
+        imageView_bottom.invalidate();
+    }
 
-        }catch (Exception e){
-            System.out.println("EEEEEEEEEEEEEE ERROR IN FTREMOVECAMERXIFEXISTS : "+e.getMessage());
-        }
+    int getSqaureWidth(){
+        int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//        System.out.println(" Activity WIDHT WIDHT WIDHT :"+activityWidth +" /// Activity HEIGHT HEIGHT HEIGHT :"+activityHeight);
+        activityWidth = activityWidth / 2;
+        activityHeight = activityHeight / 2;
+//        System.out.println("SQUARE WIDHT WIDHT WIDHT :"+sqaureWidth );
+        return activityHeight - activityWidth -24;      // statusbar height is 24 according to google guidelines
     }
 
     void setClickListeners() {
@@ -165,6 +181,8 @@ public class CamerXFragment extends Fragment {
 
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
         imageProxyViewModel.setMutableLiveDataIP(imageProxy);
+
+        imageProxyViewModel.setSqaureWidht(sqaureWidth);
     }
 
     void ftReplaceCameraXCIF(){

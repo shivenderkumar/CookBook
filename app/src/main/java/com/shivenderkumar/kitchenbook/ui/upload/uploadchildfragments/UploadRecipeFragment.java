@@ -18,20 +18,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.shivenderkumar.kitchenbook.R;
+import com.shivenderkumar.kitchenbook.model.Recipe;
 import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewModel;
 
+import org.w3c.dom.EntityReference;
+
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UploadRecipeFragment extends Fragment {
     boolean flag_backpressed = true;
     ImageButton imageButton;
     ImageView imageView_upload;
     Button button_upload;
+
+    TextView textView_recipename, textView_about, textView_ingredients, textView_steps ,textView_tags, textView_TimeToCook;
+    EditText editText_recipename, editText_about, editText_ingredients, editText_steps, editText_tags, editText_TimeToCook;
 
     private ImageProxyViewModel imageProxyViewModel;
 
@@ -73,6 +84,21 @@ public class UploadRecipeFragment extends Fragment {
         imageButton = root.findViewById(R.id.imagebutton_back);
         button_upload = root.findViewById(R.id.button_upload);
         imageView_upload = root.findViewById(R.id.imageview_upload);
+
+        //init recipe fields
+        textView_recipename = root.findViewById(R.id.textview_recipename);
+        textView_about = root.findViewById(R.id.textview_about);
+        textView_ingredients = root.findViewById(R.id.textview_Ingredients);
+        textView_steps = root.findViewById(R.id.textview_Steps);
+        textView_tags = root.findViewById(R.id.textview_Tags);
+
+        editText_recipename = root.findViewById(R.id.edittext_recipename);
+        editText_about = root.findViewById(R.id.edittext_about);
+        editText_ingredients = root.findViewById(R.id.edittext_Ingredients);
+        editText_steps = root.findViewById(R.id.edittext_Steps);
+        editText_tags = root.findViewById(R.id.edittext_Tags);
+        editText_TimeToCook = root.findViewById(R.id.edittext_TimeToCook);
+
     }
 
     void setOnclickListerner(){
@@ -86,12 +112,82 @@ public class UploadRecipeFragment extends Fragment {
         button_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // upload image
+                // create recipe object
+                Recipe recipe = createRecipeObject();
+                System.out.println("DDDDDDDDDDDDDDD  createRecipeObject Recipe");
 
+                if(recipe != null){
                 //back to cameraX -> remove upload_fragment and remove cameraX_capturedImageFragment
                 ftRemoveCameraXImageCapturedRemoveUploadRecipeFAddCameraXF();
+                //upload Fragment will make Netwrok Call Firebase and upload recipe data
+                }
+                else {
+                    return;
+                }
             }
         });
+    }
+
+    private Recipe createRecipeObject() {
+        Recipe recipe;
+        //get hashmapped Data
+        HashMap<String, String> hsmp = getHashMapText();
+
+        if(hsmp.size() > 0){
+            for(Map.Entry<String, String> entry : hsmp.entrySet()){
+                System.out.println("DDDDDDDDDDDDDDD HASHMAP KEY : " +entry.getKey()+" Value : "+ entry.getValue());
+            }
+
+        }
+        else {
+            recipe = null;
+        }
+
+        recipe = null;
+        return recipe;
+    }
+
+    private HashMap<String, String> getHashMapText() {
+
+        //get data
+        HashMap<String, String> hsmp = new HashMap<>();
+
+        String name = editText_recipename.getText().toString();
+        hsmp.put("name",name);
+        String about = editText_about.getText().toString();
+        hsmp.put("about",about);
+        String ingredients = editText_ingredients.getText().toString();
+        hsmp.put("about",about);
+        String steps = editText_steps.getText().toString();
+        hsmp.put("steps",steps);
+        String tags = editText_tags.getText().toString();
+        hsmp.put("tags",tags);
+        String timeToCook = editText_TimeToCook.getText().toString();
+        hsmp.put("TimeToCook",timeToCook);
+
+        //check data validations
+        if(validateData(hsmp)){
+
+        }else {
+            hsmp.clear();
+        }
+        return hsmp;
+    }
+
+    private boolean validateData(HashMap<String, String> hsmp) {
+        //check null or empty values
+        for(Map.Entry<String, String> entry : hsmp.entrySet()){
+            if(entry.getValue().isEmpty() || entry.getValue().equals(null)){
+                System.out.println("GGGGGGGGGGGGGGGGG VALIDATE Entry Key :"+entry.getKey()+" is invalid");
+                return false;
+            }
+            System.out.println("GGGGGGGGGGGGGGGGG VALIDATE KEY : "+entry.getKey()+" VALUE : "+entry.getValue()+" is valid");
+        }
+
+
+
+
+        return true;
     }
 
     private void ftRemoveCameraXImageCapturedRemoveUploadRecipeFAddCameraXF(){
