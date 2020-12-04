@@ -48,7 +48,7 @@ public class CamerXFragment extends Fragment {
     private ImageProxyViewModel imageProxyViewModel;
 
     ImageView imageView_top, imageView_bottom, imageView_flashButton;
-    int sqaureWidth;
+    int transpImgvwHeight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,17 +77,20 @@ public class CamerXFragment extends Fragment {
     }
 
     void displayTransparentImageView() {
-        sqaureWidth = getSqaureWidth();
-        imageView_top.getLayoutParams().height = sqaureWidth;
-        imageView_bottom.getLayoutParams().height = sqaureWidth;
-        System.out.println(" SCREEN NEW HEIGHT WIDHT WIDHT WIDHT :"+(sqaureWidth+24));
+        transpImgvwHeight = gettranspImgvwHeight();
+        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWW TRANSPARENT IMAGEVIEW HEIGHT 1 : "+ transpImgvwHeight);
+        imageView_top.getLayoutParams().height = transpImgvwHeight;
+        imageView_bottom.getLayoutParams().height = transpImgvwHeight;
+        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWW TRANSPARENT IMAGEVIEW HEIGHT + 24 :"+(transpImgvwHeight+24));
         imageView_top.invalidate();
         imageView_bottom.invalidate();
     }
 
-    int getSqaureWidth(){
+    int gettranspImgvwHeight(){
         int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
         int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+        System.out.println("ACTIVITY ACTIVITY ACTIVITY WIDTH : "+getActivity().getWindowManager().getDefaultDisplay().getWidth()
+                            +"ACTIVITY ACTIVITY ACTIVITY HEIGHT : "+ getActivity().getWindowManager().getDefaultDisplay().getHeight());
 
         activityWidth = activityWidth / 2;
         activityHeight = activityHeight / 2;
@@ -125,12 +128,11 @@ public class CamerXFragment extends Fragment {
             if(imageCapture != null){
                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
             }
-           // System.out.println("SSSSSSSSSSSSS FLASH STATE : TRUE PRESSED FLASH ON "+imageView_flashButton.isActivated());
+
         }
         else{
             imageView_flashButton.setActivated(false);
             imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_off_white_24));
-           // System.out.println("SSSSSSSSSSSSS FLASH STATE : NOT FALSE PRESSED FLASH OFF "+imageView_flashButton.isActivated());
             if(imageCapture != null){
                 imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
             }
@@ -205,7 +207,7 @@ public class CamerXFragment extends Fragment {
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
         imageProxyViewModel.setMutableLiveDataIP(imageProxy);
 
-        imageProxyViewModel.setSqaureWidht(sqaureWidth);
+        imageProxyViewModel.settranspImgvwHeight(transpImgvwHeight);
     }
 
     void ftReplaceCameraXCIF(){
