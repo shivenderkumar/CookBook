@@ -38,7 +38,6 @@ public class CameraXCapturedImageFragment extends Fragment {
     private ImageProxyViewModel imageProxyViewModel;
     private ImageProxy imageProxy = null;
 
-    int sqaureWidth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,8 +92,6 @@ public class CameraXCapturedImageFragment extends Fragment {
 
     private void observeImageProxyViewModel() {
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
-        sqaureWidth = imageProxyViewModel.gettranspImgvwHeight();
-        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWWIDTH 2 : "+ sqaureWidth);
         imageProxyViewModel.getMutableLiveDataIP().observe(getViewLifecycleOwner(), imageProxy1 -> {
             setImageProxyToImageView(imageProxy1);
         });
@@ -121,28 +118,30 @@ public class CameraXCapturedImageFragment extends Fragment {
     }
 
     private Bitmap cropSqaureBitMap(Bitmap bitmap) {
-        int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+        //  int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        //  int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
 
         //convert dp to pixels
-        activityWidth = (int) ((activityWidth) * getContext().getResources().getDisplayMetrics().density);
-        activityHeight = (int) ((activityHeight) * getContext().getResources().getDisplayMetrics().density);
+        //  activityWidth = (int) ((activityWidth) * getContext().getResources().getDisplayMetrics().density);
+        //  activityHeight = (int) ((activityHeight) * getContext().getResources().getDisplayMetrics().density);
 
-        activityWidth = activityWidth / 2;
-        activityHeight = activityHeight / 2;
+        //  activityWidth = activityWidth / 2;
+        //  activityHeight = activityHeight / 2;
 
 //        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWWIDTH + 24 in pixels : "+ sqaureWidth);
 
-        int startX = bitmap.getWidth()/2 - activityWidth;
-        int startY = bitmap.getHeight()/2 - activityHeight;
+//        int startX = bitmap.getWidth()/2 - activityWidth;
+//        int startY = bitmap.getHeight()/2 - activityHeight;
+//
+//        int endX = bitmap.getWidth()/2 + activityWidth;
+//        int endY = bitmap.getHeight()/2 + activityHeight;
+//
+//        System.out.println("BITMAP BITMAP START X :"+startX+" START Y :"+startY+" // END X :"+endX+" END Y :"+endY);
 
-        int endX = bitmap.getWidth()/2 + activityWidth;
-        int endY = bitmap.getHeight()/2 + activityHeight;
+        int bW = bitmap.getWidth();
 
-        System.out.println("BITMAP BITMAP START X :"+startX+" START Y :"+startY+" // END X :"+endX+" END Y :"+endY);
-
-        return Bitmap.createBitmap(bitmap, startX, startY, endX, endY);
+        return Bitmap.createBitmap(bitmap, 0, 0, bW, bW);
 
     }
 
@@ -169,9 +168,6 @@ public class CameraXCapturedImageFragment extends Fragment {
             }
         });
     }
-
-
-
 
 
 

@@ -1,15 +1,22 @@
 package com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments;
 
+import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.ViewPort;
+import androidx.camera.core.impl.ImageCaptureConfig;
+import androidx.camera.core.impl.ImageOutputConfig;
+import androidx.camera.core.impl.PreviewConfig;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -19,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Rational;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +45,17 @@ public class CamerXFragment extends Fragment {
 
     Button btn_takepicture;
     ImageButton imageButton_back;
+    ImageView imageView_flashButton;
 
     ///CameraX
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
     ImageCapture imageCapture;
+
+
+    // fragment communication MutableLivedata
     private ImageProxy imageProxy;
-
-    // fragment communication MutableLivedata                       
     private ImageProxyViewModel imageProxyViewModel;
-
-    ImageView imageView_top, imageView_bottom, imageView_flashButton;
-    int transpImgvwHeight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,11 +66,10 @@ public class CamerXFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_camer_x, container, false);
 
         init(root);
-        displayTransparentImageView();
         setClickListeners();
         init_preview_imagecamera_usecase(root);
 
-        return  root;
+        return root;
     }
 
     void init(View root) {
@@ -71,32 +77,9 @@ public class CamerXFragment extends Fragment {
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
         previewView = root.findViewById(R.id.previewView);
         imageView_flashButton = root.findViewById(R.id.btn_flashmode);
-        imageView_top = root.findViewById(R.id.imageview_top);
-        imageView_bottom = root.findViewById(R.id.imageview_bottom);
 
     }
 
-    void displayTransparentImageView() {
-        transpImgvwHeight = gettranspImgvwHeight();
-        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWW TRANSPARENT IMAGEVIEW HEIGHT 1 : "+ transpImgvwHeight);
-        imageView_top.getLayoutParams().height = transpImgvwHeight;
-        imageView_bottom.getLayoutParams().height = transpImgvwHeight;
-        System.out.println("SQAURE WWWWWWWWWWWWWWWWWWWWWWWW TRANSPARENT IMAGEVIEW HEIGHT + 24 :"+(transpImgvwHeight+24));
-        imageView_top.invalidate();
-        imageView_bottom.invalidate();
-    }
-
-    int gettranspImgvwHeight(){
-        int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        System.out.println("ACTIVITY ACTIVITY ACTIVITY WIDTH : "+getActivity().getWindowManager().getDefaultDisplay().getWidth()
-                            +"ACTIVITY ACTIVITY ACTIVITY HEIGHT : "+ getActivity().getWindowManager().getDefaultDisplay().getHeight());
-
-        activityWidth = activityWidth / 2;
-        activityHeight = activityHeight / 2;
-
-        return activityHeight - activityWidth -24;      // statusbar height is 24 according to google guidelines
-    }
 
     void setClickListeners() {
         imageButton_back.setOnClickListener(new View.OnClickListener() {
@@ -122,37 +105,45 @@ public class CamerXFragment extends Fragment {
     }
 
     private void changeFlashMode() {
-        if( !imageView_flashButton.isActivated()){
+        if (!imageView_flashButton.isActivated()) {
             imageView_flashButton.setActivated(true);
             imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_on_white_24));
-            if(imageCapture != null){
-               imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
+            if (imageCapture != null) {
+                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
             }
 
-        }
-        else{
+        } else {
             imageView_flashButton.setActivated(false);
             imageView_flashButton.setBackground(getResources().getDrawable(R.drawable.ic_baseline_flash_off_white_24));
-            if(imageCapture != null){
+            if (imageCapture != null) {
                 imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
             }
         }
     }
 
+    @SuppressLint("RestrictedApi")
     private void init_preview_imagecamera_usecase(View root) {
         ///camera X
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-      //  previewView = root.findViewById(R.id.previewView);
+        //  previewView = root.findViewById(R.id.previewView);
+
 
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
+                //////find activity width since may be it is same as width of preview
+                int aWdp = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+
                 //preview use case
-                Preview preview = new Preview.Builder()
+                Preview preview = new Preview.Builder()    //.setTargetAspectRatio(asratio)
                         .build();
 
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                //set preview viewPort to swaure of width and height same as activity width
+                preview.setViewPortCropRect(new Rect(0,0,aWdp,aWdp));
+
 
                 // imagecapture use case
                 imageCapture = new ImageCapture.Builder()
@@ -178,45 +169,44 @@ public class CamerXFragment extends Fragment {
 
     void btn_takepictureClick() {
 
-        imageCapture.takePicture(ContextCompat.getMainExecutor(getContext()),new ImageCapture.OnImageCapturedCallback(){
+        imageCapture.takePicture(ContextCompat.getMainExecutor(getContext()), new ImageCapture.OnImageCapturedCallback() {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 imageProxy = image;
                 makeFragmentTransaction();
-               // image.close();
-               // super.onCaptureSuccess(image);
+                // image.close();
+                // super.onCaptureSuccess(image);
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                System.out.println("EEEEEEEEEEEEEE ERROR IN TAKE PUCTURE ON IMAGECAPTURES CALLBACK : "+exception.getMessage());
+                System.out.println("EEEEEEEEEEEEEE ERROR IN TAKE PUCTURE ON IMAGECAPTURES CALLBACK : " + exception.getMessage());
                 super.onError(exception);
             }
         });
 
     }
 
-    void makeFragmentTransaction(){
+    void makeFragmentTransaction() {
         setImageProxyToMLD();
         ftReplaceCameraXCIF();
     }
 
     private void setImageProxyToMLD() {
-      //  System.out.println("ZZZZZZZZZZZZZZZ NEW IMAGE PROXY IS SET IMAGEPROXY : "+imageProxy.toString()+" // MLD :"+imageProxyViewModel.getMutableLiveDataIP().toString());
+        //  System.out.println("ZZZZZZZZZZZZZZZ NEW IMAGE PROXY IS SET IMAGEPROXY : "+imageProxy.toString()+" // MLD :"+imageProxyViewModel.getMutableLiveDataIP().toString());
 
         imageProxyViewModel = new ViewModelProvider(requireParentFragment()).get(ImageProxyViewModel.class);
         imageProxyViewModel.setMutableLiveDataIP(imageProxy);
 
-        imageProxyViewModel.settranspImgvwHeight(transpImgvwHeight);
     }
 
-    void ftReplaceCameraXCIF(){
+    void ftReplaceCameraXCIF() {
         setImageProxyToMLD();
         System.out.println("ZZZZZZZZZZZZZZZ FT to CAMERAXCAPTUREDIMAGE FRAGMENT FROM CAMERAX FRAGMENT");
 
         Fragment fragment_camerax_imagecaptured = new CameraXCapturedImageFragment();
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.parent_fragment_container, fragment_camerax_imagecaptured,"TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
+        fragmentTransaction.replace(R.id.parent_fragment_container, fragment_camerax_imagecaptured, "TAG_FRAGMENT_CAMERAX_IMAGECAPTURED").commit();
 
     }
 
@@ -231,25 +221,44 @@ public class CamerXFragment extends Fragment {
 
 
 
+//    //////////////// MEASRUEMENTS
+//    int pvWdp = previewView.getWidth();
+//    int pvHdp = previewView.getHeight();
+//                System.out.println("PREVIEWView PREVIEWView PREVIEWView WIDTH : "+ pvWdp
+//                        +"PREVIEWView PREVIEWView PREVIEWView HEIGHT : "+pvHdp);
+//
+//    pvWdp = (int) (pvWdp * getContext().getResources().getDisplayMetrics().density);
+//    pvHdp = (int) (pvHdp * getContext().getResources().getDisplayMetrics().density);
+//                System.out.println("PREVIEWView PREVIEWView PREVIEWView IN PIXEL WIDTH : "+ pvWdp
+//                        +"PREVIEWView PREVIEWView PREVIEWView IN PIXEL HEIGHT : "+pvHdp);
+//
+//
+//
+//    int aWdp = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+//    int aHdp = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//
+//                System.out.println("ACTIVITY ACTIVITY ACTIVITY DP WIDTH : "+ aWdp
+//                        +"ACTIVITY ACTIVITY ACTIVITY IN DP HEIGHT : "+aHdp);
+//
+//    aWdp = (int) (aWdp * getContext().getResources().getDisplayMetrics().density);
+//    aHdp = (int) (aHdp * getContext().getResources().getDisplayMetrics().density);
+//
+//                System.out.println("ACTIVITY ACTIVITY ACTIVITY IN PIXEL WIDTH : "+ aWdp
+//                        +"ACTIVITY ACTIVITY ACTIVITY IN PIXEL HEIGHT : "+aHdp);
+//    //////////////// MEASRUEMENTS ends
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//    int gettranspImgvwHeight(){
+//        int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+//        int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//        System.out.println("ACTIVITY ACTIVITY ACTIVITY WIDTH : "+getActivity().getWindowManager().getDefaultDisplay().getWidth()
+//                +"ACTIVITY ACTIVITY ACTIVITY HEIGHT : "+ getActivity().getWindowManager().getDefaultDisplay().getHeight());
+//
+//        activityWidth = activityWidth / 2;
+//        activityHeight = activityHeight / 2;
+//
+//        return activityHeight - activityWidth -24;      // statusbar height is 24 according to google guidelines
+//    }
 
 
     @Override

@@ -10,7 +10,6 @@ public class ImageProxyViewModel extends ViewModel {
     private final MutableLiveData<ImageProxy> mutableLiveDataIP = new MutableLiveData<>();
 
     private Bitmap image_bitmap;
-    private int transpImgvwHeight;
 
     public MutableLiveData<ImageProxy> getMutableLiveDataIP() {
         return mutableLiveDataIP;
@@ -28,11 +27,4 @@ public class ImageProxyViewModel extends ViewModel {
         this.image_bitmap = image_bitmap;
     }
 
-    public int gettranspImgvwHeight() {
-        return transpImgvwHeight;
-    }
-
-    public void settranspImgvwHeight(int transpImgvwHeight) {
-        this.transpImgvwHeight = transpImgvwHeight;
-    }
 }
