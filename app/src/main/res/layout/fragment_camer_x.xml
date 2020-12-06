@@ -11,7 +11,7 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        app:scaleType="fillStart"
+        app:scaleType="fillCenter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>

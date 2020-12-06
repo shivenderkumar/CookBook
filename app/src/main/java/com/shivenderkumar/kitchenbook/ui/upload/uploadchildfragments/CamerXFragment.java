@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Rational;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,11 +145,13 @@ public class CamerXFragment extends Fragment {
                 preview.setViewPortCropRect(new Rect(0,0,aWdp,aWdp));
 
 
+                int aHdp = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
                 // imagecapture use case
                 imageCapture = new ImageCapture.Builder()
                         .setTargetRotation(root.getDisplay().getRotation())
                         .setFlashMode(ImageCapture.FLASH_MODE_OFF)
+                       // .setTargetResolution(new Size((int)(aWdp),(int)(aWdp)))
                         .build();
 
                 // camera selector
