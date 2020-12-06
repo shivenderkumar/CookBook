@@ -138,11 +138,11 @@ public class CamerXFragment extends Fragment {
                 //preview use case
                 Preview preview = new Preview.Builder()    //.setTargetAspectRatio(asratio)
                         .build();
-
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 //set preview viewPort to swaure of width and height same as activity width
                 preview.setViewPortCropRect(new Rect(0,0,aWdp,aWdp));
+
 
 
                 // imagecapture use case
