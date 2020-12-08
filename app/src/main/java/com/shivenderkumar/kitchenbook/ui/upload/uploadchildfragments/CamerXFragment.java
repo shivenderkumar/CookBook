@@ -49,7 +49,7 @@ import static android.view.Surface.ROTATION_0;
 
 public class CamerXFragment extends Fragment {
 
-    Button btn_takepicture;
+    ImageButton btn_takepicture;
     ImageButton imageButton_back;
     ImageView imageView_flashButton, imageview_preview_square;
 
