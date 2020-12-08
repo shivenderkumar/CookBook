@@ -14,6 +14,7 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.ViewPort;
+import androidx.camera.core.impl.CaptureConfig;
 import androidx.camera.core.impl.ImageCaptureConfig;
 import androidx.camera.core.impl.ImageOutputConfig;
 import androidx.camera.core.impl.PreviewConfig;
@@ -29,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.util.Rational;
 import android.util.Size;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,11 +45,13 @@ import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewMo
 
 import java.util.concurrent.ExecutionException;
 
+import static android.view.Surface.ROTATION_0;
+
 public class CamerXFragment extends Fragment {
 
     Button btn_takepicture;
     ImageButton imageButton_back;
-    ImageView imageView_flashButton;
+    ImageView imageView_flashButton, imageview_preview_square;
 
     ///CameraX
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -78,6 +83,8 @@ public class CamerXFragment extends Fragment {
         imageButton_back = root.findViewById(R.id.imageview_upload_back);
         previewView = root.findViewById(R.id.previewView);
         imageView_flashButton = root.findViewById(R.id.btn_flashmode);
+
+        imageview_preview_square = root.findViewById(R.id.imageview_preview_square);
 
     }
 
@@ -122,36 +129,29 @@ public class CamerXFragment extends Fragment {
         }
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "UnsafeExperimentalUsageError"})
     private void init_preview_imagecamera_usecase(View root) {
         ///camera X
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-        //  previewView = root.findViewById(R.id.previewView);
-
 
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
-                //////find activity width since may be it is same as width of preview
-                int aWdp = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-
                 //preview use case
-                Preview preview = new Preview.Builder()    //.setTargetAspectRatio(asratio)
+                Preview preview = new Preview.Builder()
                         .build();
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                //set preview viewPort to swaure of width and height same as activity width
-                preview.setViewPortCropRect(new Rect(0,0,aWdp,aWdp));
-
-
-                int aHdp = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+                int pw = previewView.getMeasuredWidth();
+                int ph = previewView.getMeasuredHeight();
+                System.out.println("11111111111 pw :"+pw+" ph :"+ph);
 
                 // imagecapture use case
                 imageCapture = new ImageCapture.Builder()
                         .setTargetRotation(root.getDisplay().getRotation())
+                        .setTargetResolution(new Size(pw,pw))
                         .setFlashMode(ImageCapture.FLASH_MODE_OFF)
-                       // .setTargetResolution(new Size((int)(aWdp),(int)(aWdp)))
                         .build();
 
                 // camera selector
@@ -224,44 +224,23 @@ public class CamerXFragment extends Fragment {
 
 
 
-//    //////////////// MEASRUEMENTS
-//    int pvWdp = previewView.getWidth();
-//    int pvHdp = previewView.getHeight();
-//                System.out.println("PREVIEWView PREVIEWView PREVIEWView WIDTH : "+ pvWdp
-//                        +"PREVIEWView PREVIEWView PREVIEWView HEIGHT : "+pvHdp);
-//
-//    pvWdp = (int) (pvWdp * getContext().getResources().getDisplayMetrics().density);
-//    pvHdp = (int) (pvHdp * getContext().getResources().getDisplayMetrics().density);
-//                System.out.println("PREVIEWView PREVIEWView PREVIEWView IN PIXEL WIDTH : "+ pvWdp
-//                        +"PREVIEWView PREVIEWView PREVIEWView IN PIXEL HEIGHT : "+pvHdp);
-//
-//
-//
-//    int aWdp = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-//    int aHdp = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-//
-//                System.out.println("ACTIVITY ACTIVITY ACTIVITY DP WIDTH : "+ aWdp
-//                        +"ACTIVITY ACTIVITY ACTIVITY IN DP HEIGHT : "+aHdp);
-//
-//    aWdp = (int) (aWdp * getContext().getResources().getDisplayMetrics().density);
-//    aHdp = (int) (aHdp * getContext().getResources().getDisplayMetrics().density);
-//
-//                System.out.println("ACTIVITY ACTIVITY ACTIVITY IN PIXEL WIDTH : "+ aWdp
-//                        +"ACTIVITY ACTIVITY ACTIVITY IN PIXEL HEIGHT : "+aHdp);
-//    //////////////// MEASRUEMENTS ends
 
 
-//    int gettranspImgvwHeight(){
-//        int activityWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-//        int activityHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-//        System.out.println("ACTIVITY ACTIVITY ACTIVITY WIDTH : "+getActivity().getWindowManager().getDefaultDisplay().getWidth()
-//                +"ACTIVITY ACTIVITY ACTIVITY HEIGHT : "+ getActivity().getWindowManager().getDefaultDisplay().getHeight());
-//
-//        activityWidth = activityWidth / 2;
-//        activityHeight = activityHeight / 2;
-//
-//        return activityHeight - activityWidth -24;      // statusbar height is 24 according to google guidelines
-//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Override
