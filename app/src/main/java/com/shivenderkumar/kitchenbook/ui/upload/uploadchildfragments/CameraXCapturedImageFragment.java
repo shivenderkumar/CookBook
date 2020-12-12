@@ -3,6 +3,7 @@ package com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -13,14 +14,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.shivenderkumar.kitchenbook.R;
+import com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments.image_filter.AdapterFilterList;
+import com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments.image_filter.DataSource;
 import com.shivenderkumar.kitchenbook.ui.upload.viewmodelcamerx.ImageProxyViewModel;
 
 import java.io.File;
@@ -31,6 +39,13 @@ public class CameraXCapturedImageFragment extends Fragment {
 
     ImageButton imageButton_close, imageButton_check;
     ImageView imageview_preview;
+
+    TextView button_effects, button_edit;
+    private Boolean flag_effect= true; // true-> filter false ->edit
+    View include_lab_edit;
+    View  include_lab_filter;
+    private RecyclerView recyclerView_FilterList;
+    private AdapterFilterList adapter_FilterList;
 
     boolean flag_backpressed = true;
 
@@ -47,6 +62,16 @@ public class CameraXCapturedImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camera_x_captured_image, container, false);
 
         init(view);
+        setLabVisibilty(true);
+
+        recyclerView_FilterList = view.findViewById(R.id.recyclerView_FilterList);
+        DataSource dataSource = new DataSource(getContext());
+
+        adapter_FilterList = new AdapterFilterList(getContext(), dataSource.getArrayListfilterItem());
+        recyclerView_FilterList.setItemAnimator(new DefaultItemAnimator());
+        recyclerView_FilterList.setAdapter(adapter_FilterList);
+        adapter_FilterList.notifyDataSetChanged();
+
         setOnClickListeners();
         observeImageProxyViewModel();
         changeActivityOnBackPressedFuntionality();
@@ -58,7 +83,13 @@ public class CameraXCapturedImageFragment extends Fragment {
         imageButton_check = root.findViewById(R.id.imageview_upload_check);
         imageButton_close = root.findViewById(R.id.imageview_upload_close);
         imageview_preview = root.findViewById(R.id.imageview_preview);
+
+        button_edit = root.findViewById(R.id.button_edit);
+        button_effects = root.findViewById(R.id.button_effects);
+        include_lab_edit = root.findViewById(R.id.include_lab_edit);
+        include_lab_filter = root.findViewById(R.id.include_lab_filter);
     }
+
 
     private void setOnClickListeners() {
         imageButton_close.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +105,61 @@ public class CameraXCapturedImageFragment extends Fragment {
                 ftAddUploadRecipeF();
             }
         });
+
+        button_effects.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag_effect == true){
+                    setLabVisibilty(true);
+                }
+            }
+        });
+
+        button_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag_effect == false){
+                    setLabVisibilty(false);
+                }
+            }
+        });
+
+    }
+
+    private void setLabVisibilty(Boolean flag) {
+        flag_effect = flag;
+        if(flag_effect){
+            //change button edit color to grey
+            button_edit.setBackgroundColor(getResources().getColor(R.color.grey));
+            button_edit.setTypeface(null, Typeface.NORMAL);
+            include_lab_edit.setVisibility(View.INVISIBLE);
+            // change include layout to editlab
+
+
+            //visible filter lab
+            include_lab_filter.setVisibility(View.VISIBLE);
+            button_effects.setBackgroundColor(getResources().getColor(R.color.white));
+            button_effects.setTypeface(null, Typeface.BOLD);
+            // change include layout to filterlab
+
+            flag_effect = false;
+        }
+        else if(flag_effect==false){
+            //change button edit color to grey
+            include_lab_filter.setVisibility(View.INVISIBLE);
+            button_effects.setBackgroundColor(getResources().getColor(R.color.grey));
+            button_effects.setTypeface(null, Typeface.NORMAL);
+            // change include layout to editlab
+
+
+            //visible filter lab
+            include_lab_edit.setVisibility(View.VISIBLE);
+            button_edit.setBackgroundColor(getResources().getColor(R.color.white));
+            button_edit.setTypeface(null, Typeface.BOLD);
+            // change include layout to filterlab
+            flag_effect = true;
+
+        }
     }
 
     private void ftReplaceCameraXF(){

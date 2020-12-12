@@ -2,6 +2,7 @@ package com.shivenderkumar.kitchenbook.ui.upload.uploadchildfragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ import static android.view.Surface.ROTATION_0;
 public class CamerXFragment extends Fragment {
 
     ImageButton btn_takepicture;
+    MediaPlayer mp;
     ImageButton imageButton_back;
     ImageView imageView_flashButton, imageview_preview_square;
 
@@ -97,9 +99,11 @@ public class CamerXFragment extends Fragment {
             }
         });
 
+        mp = MediaPlayer.create(getContext(), R.raw.camerashutterclick);
         btn_takepicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mp.start();
                 btn_takepictureClick();
             }
         });
